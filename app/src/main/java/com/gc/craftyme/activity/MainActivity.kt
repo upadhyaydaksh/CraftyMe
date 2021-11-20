@@ -1,7 +1,8 @@
-package com.gc.craftyme
+package com.gc.craftyme.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.gc.craftyme.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
