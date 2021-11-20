@@ -1,13 +1,13 @@
-package com.gc.craftyme
+package com.gc.craftyme.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import com.gc.craftyme.R
+import com.gc.craftyme.utils.Constants
 
 class SplashScreenActivity : AppCompatActivity() {
-
-    private val splashScreenTimeout: Long = 2500
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +16,6 @@ class SplashScreenActivity : AppCompatActivity() {
         Handler().postDelayed({
             startActivity(Intent(this, MainActivity::class.java))
             finish()
-        }, splashScreenTimeout)
+        }, Constants.SPLASH_TIME_OUT)
     }
 }
