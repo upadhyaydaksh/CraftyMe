@@ -12,6 +12,8 @@
     <string name="action_sign_in">Log in</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="created_by_daksh_upadhyay">By Daksh Upadhyay</string>
+    <string name="action_save">Save</string>
+    <string name="action_logout">Logout</string>
 
 
 </resources>
