@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CraftyMe">
         <activity
+            android:name=".activity.AddArtworkActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ProfileActivity"
             android:exported="false" />
         <activity
