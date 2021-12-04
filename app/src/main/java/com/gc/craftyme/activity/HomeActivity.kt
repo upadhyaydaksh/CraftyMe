@@ -1,5 +1,6 @@
 package com.gc.craftyme.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gc.craftyme.R
 import com.gc.craftyme.model.ItemsViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +52,10 @@ class HomeActivity : AppCompatActivity() {
         var itemView = item.itemId
         when(itemView){
 
-            R.id.add -> Toast.makeText(applicationContext, "Add Clicked", Toast.LENGTH_SHORT).show()
+            R.id.profile -> {
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+            }
         }
         return false
     }
