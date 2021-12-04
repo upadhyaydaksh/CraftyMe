@@ -1,5 +1,7 @@
 package com.gc.craftyme.activity
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +34,17 @@ class CustomAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adap
         // sets the text to the textview from our itemHolder class
         holder.textView.text = ItemsViewModel.text
 
+        holder.itemView.setOnClickListener { view ->
+            onItemClick(view, position)
+        }
+
+    }
+
+    fun onItemClick(view: View, position: Int){
+        val context: Context = view.context
+        var intent: Intent = Intent()
+        intent = Intent(context, AddArtworkActivity::class.java)
+        context.startActivity(intent)
     }
 
     // return the number of the items in the list
