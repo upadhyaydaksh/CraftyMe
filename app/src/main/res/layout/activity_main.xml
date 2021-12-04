@@ -7,6 +7,16 @@
     android:background="@color/theme"
     tools:context=".activity.MainActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme"
+        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Login">
+
+    </androidx.appcompat.widget.Toolbar>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="240dp"
@@ -78,6 +88,7 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="btnLoginAction"
         android:text="@string/action_sign_in"
         android:textColor="@color/black"
         android:textSize="20sp"

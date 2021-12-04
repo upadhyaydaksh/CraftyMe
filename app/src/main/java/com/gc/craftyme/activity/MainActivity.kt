@@ -17,4 +17,9 @@ class MainActivity : DUBaseActivity() {
         val intent = Intent(this, SignupActivity::class.java)
         startActivity(intent)
     }
+
+    fun btnLoginAction(view: View){
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+    }
 }
