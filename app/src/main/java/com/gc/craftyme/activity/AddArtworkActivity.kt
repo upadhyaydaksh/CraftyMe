@@ -7,12 +7,12 @@ import android.view.View
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
-import com.gc.craftyme.model.ItemsViewModel
+import com.gc.craftyme.model.Artwork
 import com.google.gson.Gson
 
 class AddArtworkActivity : DUBaseActivity() {
 
-    lateinit var artwork: ItemsViewModel
+    lateinit var artwork: Artwork
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,7 @@ class AddArtworkActivity : DUBaseActivity() {
     //Firebase
     fun addArtwork(){
         val title = this.getTextFromViewById(R.id.title)
-        artwork = ItemsViewModel(this.getUniqueId(), title)
+        artwork = Artwork(this.getUniqueId(), title)
         val artworks = buildMap(1){
             put(artwork.id, artwork)
         }
@@ -72,7 +72,7 @@ class AddArtworkActivity : DUBaseActivity() {
 
     fun updateArtwork(){
         val title = this.getTextFromViewById(R.id.title)
-        artwork = ItemsViewModel(artwork.id, title)
+        artwork = Artwork(artwork.id, title)
         val artworks = buildMap(1){
             put(firebaseDatabase.key.toString(), artwork)
         }
@@ -91,7 +91,7 @@ class AddArtworkActivity : DUBaseActivity() {
         firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).get()
             .addOnSuccessListener {
                 Log.i(TAG, "Got value ${it.value}")
-                artwork = Gson().fromJson(it.value.toString(), ItemsViewModel::class.java)
+                artwork = Gson().fromJson(it.value.toString(), Artwork::class.java)
                 if(artwork != null){
                     this.setTextFromViewById(R.id.title, artwork.title)
                 }

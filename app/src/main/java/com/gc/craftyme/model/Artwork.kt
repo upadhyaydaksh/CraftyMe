@@ -1,6 +1,6 @@
 package com.gc.craftyme.model
 
-open class ItemsViewModel {
+open class Artwork {
 
     var title = "text"
     var id = "1"

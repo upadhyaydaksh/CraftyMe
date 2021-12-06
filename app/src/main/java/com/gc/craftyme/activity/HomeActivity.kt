@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
-import com.gc.craftyme.model.ItemsViewModel
+import com.gc.craftyme.model.Artwork
 import kotlinx.android.synthetic.main.activity_home.*
 
 
@@ -62,19 +62,19 @@ class HomeActivity : DUBaseActivity() {
                 Log.d(TAG, "Got Artworks ${(it.getValue())}")
 
                 var artworkMap = it.getValue() as Map<String, Any>
-                var artworks: ArrayList<ItemsViewModel> = ArrayList()
-                var artwork: ItemsViewModel
+                var artworks: ArrayList<Artwork> = ArrayList()
+                var artwork: Artwork
 
                 for ((k, v) in artworkMap) {
                     var artworkValuesMap = v as Map<String, String>
-                    artwork = ItemsViewModel(
+                    artwork = Artwork(
                         artworkValuesMap.get(ARTWORK_ID).toString(),
                         artworkValuesMap.get(ARTWORK_TITLE).toString())
                     artworks.add(artwork)
                 }
 
                 //Passing data to custom adapter
-                val adapter = CustomAdapter(artworks)
+                val adapter = HomeAdapter(artworks)
                 // Setting the Adapter with the recyclerview
                 recyclerview.adapter = adapter
 

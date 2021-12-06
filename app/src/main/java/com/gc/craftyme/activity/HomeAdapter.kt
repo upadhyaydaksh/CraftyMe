@@ -9,9 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gc.craftyme.R
-import com.gc.craftyme.model.ItemsViewModel
+import com.gc.craftyme.model.Artwork
 
-class CustomAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
