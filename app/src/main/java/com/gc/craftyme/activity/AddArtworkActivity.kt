@@ -7,6 +7,7 @@ import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.ItemsViewModel
+import com.google.gson.Gson
 
 class AddArtworkActivity : DUBaseActivity() {
 
@@ -19,6 +20,10 @@ class AddArtworkActivity : DUBaseActivity() {
 
     fun btnSaveAction(view: View){
         this.addArtwork()
+    }
+
+    fun btnDeleteAction(view: View){
+        this.deleteArtwork()
     }
 
     fun updateUi(){
@@ -56,7 +61,32 @@ class AddArtworkActivity : DUBaseActivity() {
                 this.updateUi()
             }
             .addOnFailureListener{
-                Log.e(TAG, "Error Adding or Updating Artwork data", it)
+                Log.e(TAG, "Error Updating Artwork data", it)
+            }
+    }
+
+    fun getArtwork(){
+        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).get()
+            .addOnSuccessListener {
+                Log.i(TAG, "Got value ${it.value}")
+                artwork = Gson().fromJson(it.value.toString(), ItemsViewModel::class.java)
+                if(artwork != null){
+                    this.setTextFromViewById(R.id.title, artwork.title)
+                }
+            }.addOnFailureListener{
+                Log.e(TAG, "Error getting artwork data", it)
+            }
+    }
+
+    fun deleteArtwork(){
+        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).removeValue()
+            .addOnSuccessListener {
+                Log.i(TAG, "Artwork deleted successfully")
+                toast("Artwork deleted Successfully")
+                this.updateUi()
+            }
+            .addOnFailureListener{
+                Log.e(TAG, "Error deleting Artwork", it)
             }
     }
 

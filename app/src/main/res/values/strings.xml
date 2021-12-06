@@ -17,6 +17,7 @@
     <string name="prompt_title">Title</string>
     <string name="content_ddescription_add_new">Add</string>
     <string name="action_update">Update</string>
+    <string name="action_delete">delete</string>
 
 
 </resources>
