@@ -1,9 +1,5 @@
 package com.gc.craftyme.model
 
-import android.app.Activity
-import android.widget.Toast
-import com.google.gson.Gson
-
 open class User {
 
     var id = ""

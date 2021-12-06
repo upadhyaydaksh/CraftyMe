@@ -3,10 +3,8 @@ package com.gc.craftyme.activity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
-import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.User
 import com.google.gson.Gson
 
@@ -20,7 +18,7 @@ class ProfileActivity : DUBaseActivity() {
         this.getProfile()
     }
 
-    fun btnSaveAction(view: View){
+    fun btnUpdateAction(view: View){
         this.updateProfile()
     }
 
@@ -47,7 +45,7 @@ class ProfileActivity : DUBaseActivity() {
     private fun updateProfile() {
         user.firstName = this.getTextFromViewById(R.id.firstName)
         user.lastName = this.getTextFromViewById(R.id.lastName)
-        firebaseDatabase.child("users").child(user.id).setValue(user)
+        firebaseDatabase.child(NODE_USERS).child(user.id).setValue(user)
             .addOnSuccessListener {
                 Log.i(TAG, "User Updated")
             }

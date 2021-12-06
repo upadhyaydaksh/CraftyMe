@@ -18,7 +18,7 @@ open class DUBaseActivity : AppCompatActivity() {
 
     //NODES in Firebase
     protected val NODE_USERS = "users"
-    protected val NODE_ARTWORKS = "artworks"
+    protected val NODE_USERS_ARTWORKS = "artworks"
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +27,10 @@ open class DUBaseActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         // Initialize Firebase Database
         firebaseDatabase = Firebase.database.reference
+    }
+
+    fun getUniqueId(): String {
+        return System.currentTimeMillis().toString()
     }
 
     fun setTextFromViewById(id: Int, text: String) {

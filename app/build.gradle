@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
 
-    //Gson for copying values
+    //Gson for copying JSON values to object
     implementation 'com.google.code.gson:gson:2.8.6'
 
     //Recyclerview

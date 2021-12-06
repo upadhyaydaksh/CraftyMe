@@ -27,7 +27,7 @@
                 app:srcCompat="@drawable/splash" />
 
             <EditText
-                android:id="@+id/username2"
+                android:id="@+id/title"
                 android:layout_width="371dp"
                 android:layout_height="48dp"
                 android:background="@color/white"
@@ -51,7 +51,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button"
+                    android:id="@+id/save"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
@@ -59,6 +59,7 @@
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="20dp"
                     android:layout_weight="1"
+                    android:onClick="btnSaveAction"
                     android:singleLine="true"
                     android:text="@string/action_save"
                     android:textColor="@color/black"

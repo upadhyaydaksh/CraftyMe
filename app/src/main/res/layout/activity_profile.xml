@@ -110,7 +110,7 @@
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="20dp"
                     android:layout_weight="1"
-                    android:onClick="btnSaveAction"
+                    android:onClick="btnUpdateAction"
                     android:singleLine="true"
                     android:text="@string/action_save"
                     android:textColor="@color/black"
