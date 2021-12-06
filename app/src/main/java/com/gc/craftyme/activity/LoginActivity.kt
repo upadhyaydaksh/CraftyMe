@@ -17,13 +17,11 @@ class LoginActivity : DUBaseActivity() {
     }
 
     fun btnSignupAction(view: View){
-        this.goToNextActivity(ProfileActivity::class.java)
+        this.goToNextActivity(SignupActivity::class.java)
     }
 
     fun btnLoginAction(view: View){
-        val email: String = this.getTextFromViewById(R.id.email)
-        val password: String = this.getTextFromViewById(R.id.password)
-        this.signIn(email, password)
+        this.signIn()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -42,18 +40,20 @@ class LoginActivity : DUBaseActivity() {
     }
 
     //Firebase
-    private fun signIn(email: String, password: String) {
+    private fun signIn() {
+        val email: String = this.getTextFromViewById(R.id.email)
+        val password: String = this.getTextFromViewById(R.id.password)
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d("SignInActivity", "signInWithEmail:success")
+                    Log.d(TAG, "signInWithEmail:success")
                     val user = firebaseAuth.currentUser
                     toast("Login Successful")
                     this.updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w("SignInActivity", "signInWithEmail:failure", task.exception)
+                    Log.w(TAG, "signInWithEmail:failure", task.exception)
                     toast("Authentication failed. Please Try Again")
                 }
             }
