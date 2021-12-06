@@ -102,7 +102,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/save"
+                    android:id="@+id/update"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
@@ -112,7 +112,7 @@
                     android:layout_weight="1"
                     android:onClick="btnUpdateAction"
                     android:singleLine="true"
-                    android:text="@string/action_save"
+                    android:text="@string/action_update"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"

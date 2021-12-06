@@ -10,8 +10,8 @@ open class User {
     constructor(id: String, firstName: String, lastName: String, email: String) {
         this.id = id
         this.firstName = firstName
-        this.email = email
         this.lastName = lastName
+        this.email = email
     }
 
 }
