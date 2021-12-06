@@ -37,8 +37,10 @@ class SignupActivity : DUBaseActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     var user = User(firebaseAuth.uid.toString() ,firstName, lastName, email)
-                    firebaseDatabase.child("users").child(user.id).setValue(user)
-                    this.updateUI(firebaseAuth.currentUser)
+                    firebaseDatabase.child(NODE_USERS).child(user.id).setValue(user)
+                        .addOnSuccessListener{
+                            this.updateUI(firebaseAuth.currentUser)
+                        }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)

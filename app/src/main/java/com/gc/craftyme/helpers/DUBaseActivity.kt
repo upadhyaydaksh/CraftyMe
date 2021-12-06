@@ -16,16 +16,21 @@ open class DUBaseActivity : AppCompatActivity() {
     protected lateinit var firebaseAuth: FirebaseAuth
     protected lateinit var firebaseDatabase: DatabaseReference
 
+    //NODES in Firebase
+    protected val NODE_USERS = "users"
+    protected val NODE_ARTWORKS = "artworks"
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance()
+        // Initialize Firebase Database
         firebaseDatabase = Firebase.database.reference
     }
 
-    fun setTextFromViewById(id: Int) {
-        val text = (findViewById(id) as TextView)
+    fun setTextFromViewById(id: Int, text: String) {
+        (findViewById(id) as TextView).text = text
     }
 
     fun getTextFromViewById(id: Int): String {

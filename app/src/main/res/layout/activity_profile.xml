@@ -37,7 +37,7 @@
                 app:srcCompat="@drawable/splash" />
 
             <EditText
-                android:id="@+id/username2"
+                android:id="@+id/firstName"
                 android:layout_width="371dp"
                 android:layout_height="48dp"
                 android:background="@color/white"
@@ -56,7 +56,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/username3"
+                android:id="@+id/lastName"
                 android:layout_width="371dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="20dp"
@@ -76,7 +76,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/username2" />
 
             <EditText
-                android:id="@+id/username"
+                android:id="@+id/email"
                 android:layout_width="371dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="20dp"
@@ -102,7 +102,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button"
+                    android:id="@+id/save"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
@@ -110,6 +110,7 @@
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="20dp"
                     android:layout_weight="1"
+                    android:onClick="btnSaveAction"
                     android:singleLine="true"
                     android:text="@string/action_save"
                     android:textColor="@color/black"
@@ -124,7 +125,7 @@
                     app:strokeColor="@color/black" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button2"
+                    android:id="@+id/logout"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
