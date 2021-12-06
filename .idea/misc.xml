@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/ic_profile.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/activity_add_artwork.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29916897506925205" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.24242424242424243" />
