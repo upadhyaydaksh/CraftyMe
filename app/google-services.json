@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "955858249525",
+    "firebase_url": "https://craftyme-cbdb6-default-rtdb.firebaseio.com",
+    "project_id": "craftyme-cbdb6",
+    "storage_bucket": "craftyme-cbdb6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955858249525:android:a8d1c2f641a5031d7ace7c",
+        "android_client_info": {
+          "package_name": "com.gc.craftyme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "955858249525-sj4gjbifda2bnc5b5fvq715d38sq2hbj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1qij_U5jSWKHqXVLVgORZkXrO8GFh9nE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "955858249525-sj4gjbifda2bnc5b5fvq715d38sq2hbj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "955858249525-jtoj1vprlsk87uus55ufdoh8nhat1lb7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.georgiancollege.CraftyMe"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
