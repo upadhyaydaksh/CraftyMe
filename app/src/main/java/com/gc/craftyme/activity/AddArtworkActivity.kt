@@ -1,5 +1,6 @@
 package com.gc.craftyme.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -27,7 +28,7 @@ class AddArtworkActivity : DUBaseActivity() {
     }
 
     fun updateUi(){
-        this.goToNextActivity(HomeActivity::class.java)
+        this.goBackToHomeActivity()
     }
 
     //Firebase
