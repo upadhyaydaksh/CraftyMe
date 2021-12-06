@@ -23,7 +23,7 @@ class SplashScreenActivity : DUBaseActivity() {
                 this.goToNextActivity(HomeActivity::class.java)
             }
             else{
-                this.goToNextActivity(MainActivity::class.java)
+                this.goToNextActivity(LoginActivity::class.java)
             }
         }, Constants.SPLASH_TIME_OUT)
     }
