@@ -1,19 +1,18 @@
 package com.gc.craftyme.activity
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gc.craftyme.R
+import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.model.ItemsViewModel
 import kotlinx.android.synthetic.main.activity_home.*
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : DUBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -54,15 +53,13 @@ class HomeActivity : AppCompatActivity() {
         when(itemView){
 
             R.id.profile -> {
-                val intent = Intent(this, ProfileActivity::class.java)
-                startActivity(intent)
+                this.goToNextActivity(ProfileActivity::class.java)
             }
         }
         return false
     }
 
     fun btnAddAction(view: View){
-        val intent = Intent(this, AddArtworkActivity::class.java)
-        startActivity(intent)
+        this.goToNextActivity(AddArtworkActivity::class.java)
     }
 }
