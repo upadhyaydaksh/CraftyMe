@@ -1,5 +1,6 @@
 package com.gc.craftyme.activity
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -23,7 +24,29 @@ class ProfileActivity : DUBaseActivity() {
     }
 
     fun btnLogoutAction(view: View){
-        this.signOut()
+        val builder = AlertDialog.Builder(this)
+        //set title for alert dialog
+        builder.setTitle(R.string.logout)
+        //set message for alert dialog
+        builder.setMessage(R.string.Are_you_sure_logout)
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+
+        //performing positive action
+        builder.setPositiveButton("Yes"){dialogInterface, which ->
+            this.signOut()
+        }
+        //performing cancel action
+        builder.setNeutralButton("Cancel"){dialogInterface , which -> }
+
+        //performing negative action
+        builder.setNegativeButton("No"){dialogInterface, which -> }
+
+        // Create the AlertDialog
+        val alertDialog: AlertDialog = builder.create()
+
+        // Set other dialog properties
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     //Firebase

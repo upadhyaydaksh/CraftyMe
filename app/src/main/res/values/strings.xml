@@ -18,6 +18,9 @@
     <string name="content_ddescription_add_new">Add</string>
     <string name="action_update">Update</string>
     <string name="action_delete">delete</string>
-
+    <string name="logout">Logout</string>
+    <string name="delete">Delete</string>
+    <string name="Are_you_sure_delete_artwork">Are you sure you want to delete this artwork?</string>
+    <string name="Are_you_sure_logout">Are you sure you want to logout?</string>
 
 </resources>

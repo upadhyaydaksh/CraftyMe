@@ -1,6 +1,6 @@
 package com.gc.craftyme.activity
 
-import android.content.Intent
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -24,7 +24,28 @@ class AddArtworkActivity : DUBaseActivity() {
     }
 
     fun btnDeleteAction(view: View){
-        this.deleteArtwork()
+        val builder = AlertDialog.Builder(this)
+        //set title for alert dialog
+        builder.setTitle(R.string.delete)
+        //set message for alert dialog
+        builder.setMessage(R.string.Are_you_sure_delete_artwork)
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+
+        //performing positive action
+        builder.setPositiveButton("Yes"){dialogInterface, which ->
+            this.deleteArtwork()
+        }
+
+        //performing cancel action
+        builder.setNeutralButton("Cancel"){dialogInterface , which -> }
+
+        //performing negative action
+        builder.setNegativeButton("No"){dialogInterface, which -> }
+        // Create the AlertDialog
+        val alertDialog: AlertDialog = builder.create()
+        // Set other dialog properties
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     fun updateUi(){

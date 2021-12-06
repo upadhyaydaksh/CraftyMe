@@ -21,6 +21,10 @@ open class DUBaseActivity : AppCompatActivity() {
     protected val NODE_USERS = "users"
     protected val NODE_USERS_ARTWORKS = "artworks"
 
+    //Artwork Fields
+    protected val ARTWORK_ID = "id"
+    protected val ARTWORK_TITLE = "title"
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -2,6 +2,7 @@ package com.gc.craftyme.activity
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,7 +13,9 @@ import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.model.ItemsViewModel
 import kotlinx.android.synthetic.main.activity_home.*
 
+
 class HomeActivity : DUBaseActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -26,21 +29,11 @@ class HomeActivity : DUBaseActivity() {
         // this creates a vertical layout Manager
         recyclerview.layoutManager = LinearLayoutManager(this)
 
-        // ArrayList of class ItemsViewModel
-        val data = ArrayList<ItemsViewModel>()
+    }
 
-        // This loop will create 20 Views containing
-        // the image with the count of view
-        for (i in 1..20) {
-            data.add(ItemsViewModel("1", "Item " + i))
-        }
-
-        // This will pass the ArrayList to our Adapter
-        val adapter = CustomAdapter(data)
-
-        // Setting the Adapter with the recyclerview
-        recyclerview.adapter = adapter
-
+    override fun onStart() {
+        super.onStart()
+        this.getArtworks()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -60,5 +53,33 @@ class HomeActivity : DUBaseActivity() {
 
     fun btnAddAction(view: View){
         this.goToNextActivity(AddArtworkActivity::class.java)
+    }
+
+    //Firebase
+    fun getArtworks(){
+        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).get()
+            .addOnSuccessListener {
+                Log.d(TAG, "Got Artworks ${(it.getValue())}")
+
+                var artworkMap = it.getValue() as Map<String, Any>
+                var artworks: ArrayList<ItemsViewModel> = ArrayList()
+                var artwork: ItemsViewModel
+
+                for ((k, v) in artworkMap) {
+                    var artworkValuesMap = v as Map<String, String>
+                    artwork = ItemsViewModel(
+                        artworkValuesMap.get(ARTWORK_ID).toString(),
+                        artworkValuesMap.get(ARTWORK_TITLE).toString())
+                    artworks.add(artwork)
+                }
+
+                //Passing data to custom adapter
+                val adapter = CustomAdapter(artworks)
+                // Setting the Adapter with the recyclerview
+                recyclerview.adapter = adapter
+
+            }.addOnFailureListener{
+                Log.e(TAG, "Error getting Artworks", it)
+            }
     }
 }
