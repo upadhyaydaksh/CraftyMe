@@ -10,10 +10,10 @@ import com.gc.craftyme.helpers.Extensions.toast
 import com.google.firebase.auth.FirebaseUser
 
 
-class MainActivity : DUBaseActivity() {
+class LoginActivity : DUBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
     }
 
     fun btnSignupAction(view: View){
@@ -49,6 +49,7 @@ class MainActivity : DUBaseActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("SignInActivity", "signInWithEmail:success")
                     val user = firebaseAuth.currentUser
+                    toast("Login Successful")
                     this.updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
