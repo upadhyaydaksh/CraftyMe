@@ -21,18 +21,22 @@ class AddArtworkActivity : DUBaseActivity() {
         this.addArtwork()
     }
 
+    fun updateUi(){
+        this.goToNextActivity(HomeActivity::class.java)
+    }
+
     //Firebase
     fun addArtwork(){
-        val id = this.getUniqueId()
         val title = this.getTextFromViewById(R.id.title)
-        artwork = ItemsViewModel(1, title)
+        artwork = ItemsViewModel(this.getUniqueId(), title)
         val artworks = buildMap(1){
-            put(id, artwork)
+            put(artwork.id, artwork)
         }
         firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).updateChildren(artworks)
             .addOnSuccessListener {
                 Log.i(TAG, "Artwork Added successfully")
                 toast("Artwork Added Successfully")
+                this.updateUi()
             }
             .addOnFailureListener{
                 Log.e(TAG, "Error Adding Artwork data", it)
@@ -41,7 +45,7 @@ class AddArtworkActivity : DUBaseActivity() {
 
     fun updateArtwork(){
         val title = this.getTextFromViewById(R.id.title)
-        artwork = ItemsViewModel(1, title)
+        artwork = ItemsViewModel(artwork.id, title)
         val artworks = buildMap(1){
             put(firebaseDatabase.key.toString(), artwork)
         }
@@ -49,6 +53,7 @@ class AddArtworkActivity : DUBaseActivity() {
             .addOnSuccessListener {
                 Log.i(TAG, "Artwork Added or Updated successfully")
                 toast("Artwork Updated Successfully")
+                this.updateUi()
             }
             .addOnFailureListener{
                 Log.e(TAG, "Error Adding or Updating Artwork data", it)
