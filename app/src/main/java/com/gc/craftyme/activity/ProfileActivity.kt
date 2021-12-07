@@ -8,7 +8,6 @@ import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.User
-import com.google.gson.Gson
 
 class ProfileActivity : DUBaseActivity() {
 

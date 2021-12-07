@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gc.craftyme.R
 import com.gc.craftyme.model.Artwork
+import com.gc.craftyme.utils.Constants
 
 class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
@@ -26,24 +27,25 @@ class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeA
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val ItemsViewModel = mList[position]
+        val artwork = mList[position]
 
         // sets the image to the imageview from our itemHolder class
         holder.imageView.setImageResource(R.drawable.splash)
 
         // sets the text to the textview from our itemHolder class
-        holder.textView.text = ItemsViewModel.title
+        holder.textView.text = artwork.title
 
         holder.itemView.setOnClickListener { view ->
-            onItemClick(view, position)
+            onItemClick(view, artwork)
         }
 
     }
 
-    fun onItemClick(view: View, position: Int){
+    fun onItemClick(view: View, artwork: Artwork){
         val context: Context = view.context
-        var intent: Intent = Intent()
-        intent = Intent(context, AddArtworkActivity::class.java)
+        var intent = Intent(context, AddArtworkActivity::class.java)
+        intent.putExtra(Constants.ARTWORK_DETAIL_ID, artwork.id)
+        intent.putExtra(Constants.IS_NEW, false)
         context.startActivity(intent)
     }
 

@@ -8,19 +8,36 @@ import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.Artwork
-import com.google.gson.Gson
+import com.gc.craftyme.utils.Constants
 
 class AddArtworkActivity : DUBaseActivity() {
 
     lateinit var artwork: Artwork
+    var artworkId = ""
+    var isNew = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artwork)
     }
 
+    override fun onStart() {
+        super.onStart()
+        artworkId = intent.getStringExtra(Constants.ARTWORK_DETAIL_ID).toString()
+        isNew = intent.getBooleanExtra(Constants.IS_NEW, true)
+        if(!isNew){
+            this.setTextFromViewById(R.id.save, "Update")
+            this.getArtwork()
+        }
+
+    }
+
     fun btnSaveAction(view: View){
-        this.addArtwork()
+        if(isNew){
+            this.addArtwork()
+        }else{
+            this.updateArtwork()
+        }
     }
 
     fun btnDeleteAction(view: View){
@@ -73,10 +90,7 @@ class AddArtworkActivity : DUBaseActivity() {
     fun updateArtwork(){
         val title = this.getTextFromViewById(R.id.title)
         artwork = Artwork(artwork.id, title)
-        val artworks = buildMap(1){
-            put(firebaseDatabase.key.toString(), artwork)
-        }
-        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).updateChildren(artworks)
+        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
             .addOnSuccessListener {
                 Log.i(TAG, "Artwork Added or Updated successfully")
                 toast("Artwork Updated Successfully")
@@ -88,14 +102,20 @@ class AddArtworkActivity : DUBaseActivity() {
     }
 
     fun getArtwork(){
-        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).get()
+        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artworkId).get()
             .addOnSuccessListener {
-                Log.i(TAG, "Got value ${it.value}")
-                artwork = Gson().fromJson(it.value.toString(), Artwork::class.java)
-                if(artwork != null){
-                    this.setTextFromViewById(R.id.title, artwork.title)
+                if(it.value != null){
+                    Log.i(TAG, "Got value ${it.value}")
+                    var artworkMap = it.getValue() as Map<String, Any>
+                    artwork = Artwork(
+                        artworkMap.get(ARTWORK_ID).toString(),
+                        artworkMap.get(ARTWORK_TITLE).toString())
+                    if(artwork != null){
+                        this.setTextFromViewById(R.id.title, artwork.title)
+                    }
                 }
-            }.addOnFailureListener{
+            }
+            .addOnFailureListener{
                 Log.e(TAG, "Error getting artwork data", it)
             }
     }
