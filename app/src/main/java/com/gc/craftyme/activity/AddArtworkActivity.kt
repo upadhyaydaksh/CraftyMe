@@ -1,10 +1,13 @@
 package com.gc.craftyme.activity
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
+import android.widget.Button
+import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContracts
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
@@ -16,10 +19,13 @@ class AddArtworkActivity : DUBaseActivity() {
     lateinit var artwork: Artwork
     var artworkId = ""
     var isNew = true
+    var imageView: ImageView? = null
+    
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artwork)
+        imageView = findViewById(R.id.artworkImage) as ImageView
     }
 
     override fun onStart() {
@@ -27,7 +33,7 @@ class AddArtworkActivity : DUBaseActivity() {
         artworkId = intent.getStringExtra(Constants.ARTWORK_DETAIL_ID).toString()
         isNew = intent.getBooleanExtra(Constants.IS_NEW, true)
         if(isNew){
-            (findViewById(R.id.delete) as TextView).visibility = View.INVISIBLE
+            (findViewById(R.id.delete) as Button).visibility = Button.GONE
         }else{
             this.setTextFromViewById(R.id.save, "Update")
             this.getArtwork()
@@ -70,6 +76,18 @@ class AddArtworkActivity : DUBaseActivity() {
     fun updateUi(){
         this.goBackToHomeActivity()
     }
+
+    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val uri = it.data?.data!!
+            // Use the uri to load the image
+        }
+    }
+
+    fun btnImagePickerAction(view: View){
+
+    }
+
 
     //Firebase
     fun addArtwork(){
