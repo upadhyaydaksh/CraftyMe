@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
@@ -25,11 +26,12 @@ class AddArtworkActivity : DUBaseActivity() {
         super.onStart()
         artworkId = intent.getStringExtra(Constants.ARTWORK_DETAIL_ID).toString()
         isNew = intent.getBooleanExtra(Constants.IS_NEW, true)
-        if(!isNew){
+        if(isNew){
+            (findViewById(R.id.delete) as TextView).visibility = View.INVISIBLE
+        }else{
             this.setTextFromViewById(R.id.save, "Update")
             this.getArtwork()
         }
-
     }
 
     fun btnSaveAction(view: View){
