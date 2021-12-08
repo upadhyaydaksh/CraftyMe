@@ -4,10 +4,12 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.User
+import com.squareup.picasso.Picasso
 
 class ProfileActivity : DUBaseActivity() {
 
@@ -16,6 +18,7 @@ class ProfileActivity : DUBaseActivity() {
     private val FIRST_NAME = "firstName"
     private val LAST_NAME = "lastName"
     private val EMAIL = "email"
+    private val PROFILE_PICTURE = "profilePicture"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,12 +66,20 @@ class ProfileActivity : DUBaseActivity() {
                     userMap.get(ID) as String,
                     userMap.get(FIRST_NAME) as String,
                     userMap.get(LAST_NAME) as String,
-                    userMap.get(EMAIL) as String
+                    userMap.get(EMAIL) as String,
+                    userMap.get(PROFILE_PICTURE) as String
                 )
                 if(user != null){
                     this.setTextFromViewById(R.id.firstName, user.firstName)
                     this.setTextFromViewById(R.id.lastName, user.lastName)
                     this.setTextFromViewById(R.id.email, user.email)
+                    val profileImage: ImageView = findViewById(R.id.profileImage) as ImageView
+                    if(user.profilePicture != ""){
+                        Picasso.get().load(user.profilePicture).into(profileImage)
+                    }
+                    else{
+                        profileImage.setImageResource(R.drawable.splash)
+                    }
                 }
             }.addOnFailureListener{
                 Log.e(TAG, "Error getting User data", it)
