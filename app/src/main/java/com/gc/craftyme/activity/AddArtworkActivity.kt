@@ -2,6 +2,8 @@ package com.gc.craftyme.activity
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -9,12 +11,23 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.Artwork
 import com.gc.craftyme.utils.Constants
+import com.google.android.gms.tasks.Task
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.ktx.storageMetadata
 import com.squareup.picasso.Picasso
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
+import kotlin.coroutines.Continuation
 
 class AddArtworkActivity : DUBaseActivity() {
 
@@ -96,7 +109,37 @@ class AddArtworkActivity : DUBaseActivity() {
 
 
     //Firebase
+//    private fun uploadImage(){
+//        if(imageUri != null){
+//            val storageReference = firebaseStorage.getReference()
+//            val ref = storageReference?.child("uploads/" + UUID.randomUUID().toString())
+//            val uploadTask = ref?.putFile(imageUri!!)
+//
+//            val urlTask = uploadTask?.continueWithTask(Continuation()<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+//                if (!task.isSuccessful) {
+//                    task.exception?.let {
+//                        throw it
+//                    }
+//                }
+//                return@Continuation ref.downloadUrl
+//            })?.addOnCompleteListener {
+//                    task ->
+//                if (task.isSuccessful) {
+//                    val downloadUri = task.result
+////                    addUploadRecordToDb(downloadUri.toString())
+//                } else {
+//                    // Handle failures
+//                }
+//            }?.addOnFailureListener{
+//
+//            }
+//        }else{
+//            Toast.makeText(this, "Please Upload an Image", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+
     fun addArtwork(){
+//        this.uploadImage()
         val title = this.getTextFromViewById(R.id.title)
         val description = this.getTextFromViewById(R.id.description)
         var artworkImageUrl = ""
@@ -104,7 +147,7 @@ class AddArtworkActivity : DUBaseActivity() {
             artworkImageUrl = imageUri.toString()
         }
 
-        artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl)
+        artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl, "")
         val artworks = buildMap(1){
             put(artwork.id, artwork)
         }
@@ -128,7 +171,7 @@ class AddArtworkActivity : DUBaseActivity() {
         }else{
             artworkImageUrl = artwork.artworkImageUrl
         }
-        artwork = Artwork(artwork.id, title, description, artworkImageUrl)
+        artwork = Artwork(artwork.id, title, description, artworkImageUrl, "")
         firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
             .addOnSuccessListener {
                 Log.i(TAG, "Artwork Added or Updated successfully")
@@ -150,7 +193,8 @@ class AddArtworkActivity : DUBaseActivity() {
                         artworkMap.get(ARTWORK_ID).toString(),
                         artworkMap.get(ARTWORK_TITLE).toString(),
                         artworkMap.get(ARTWORK_DESCRIPTION).toString(),
-                        artworkMap.get(ARTWORK_IMAGE_URL).toString())
+                        artworkMap.get(ARTWORK_IMAGE_URL).toString(),
+                        artworkMap.get(ARTWORK_CREATED_DATE).toString())
                     if(artwork != null){
                         this.setTextFromViewById(R.id.title, artwork.title)
                         this.setTextFromViewById(R.id.description, artwork.artDescription)

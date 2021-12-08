@@ -41,7 +41,7 @@ class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeA
         // sets the text to the textview from our itemHolder class
         holder.titleView.text = artwork.title
 
-//        holder.createdDateView.text =
+        holder.createdDateView.text = artwork.createdDate
 
         holder.descriptionView.text = artwork.artDescription
 

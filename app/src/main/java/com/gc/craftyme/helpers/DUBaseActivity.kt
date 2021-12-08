@@ -10,12 +10,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 
 open class DUBaseActivity : AppCompatActivity() {
 
     protected val TAG: String = this.javaClass.simpleName
     protected lateinit var firebaseAuth: FirebaseAuth
     protected lateinit var firebaseDatabase: DatabaseReference
+    protected lateinit var firebaseStorage: FirebaseStorage
 
     //NODES in Firebase
     protected val NODE_USERS = "users"
@@ -24,7 +26,7 @@ open class DUBaseActivity : AppCompatActivity() {
     //Artwork Fields
     protected val ARTWORK_ID = "id"
     protected val ARTWORK_TITLE = "title"
-    protected val ARTWORK_CREATED = "createdDate"
+    protected val ARTWORK_CREATED_DATE = "createdDate"
     protected val ARTWORK_DESCRIPTION = "artDescription"
     protected val ARTWORK_IMAGE_URL = "artworkImageUrl"
 
@@ -35,6 +37,8 @@ open class DUBaseActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         // Initialize Firebase Database
         firebaseDatabase = Firebase.database.reference
+        // Initialize Storage
+        firebaseStorage = FirebaseStorage.getInstance()
     }
 
     fun getUniqueId(): String {

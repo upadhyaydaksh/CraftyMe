@@ -71,7 +71,8 @@ class HomeActivity : DUBaseActivity() {
                             artworkValuesMap.get(ARTWORK_ID).toString(),
                             artworkValuesMap.get(ARTWORK_TITLE).toString(),
                             artworkValuesMap.get(ARTWORK_DESCRIPTION).toString(),
-                            artworkValuesMap.get(ARTWORK_IMAGE_URL).toString())
+                            artworkValuesMap.get(ARTWORK_IMAGE_URL).toString(),
+                            artworkValuesMap.get(ARTWORK_CREATED_DATE).toString())
                         artworks.add(artwork)
                     }
                 }
