@@ -50,10 +50,8 @@ class AddArtworkActivity : DUBaseActivity() {
         artworkId = intent.getStringExtra(Constants.ARTWORK_DETAIL_ID).toString()
         isNew = intent.getBooleanExtra(Constants.IS_NEW, true)
         if(isNew){
-//            (findViewById(R.id.toolbar) as Toolbar).title = "Add Artwork"
             (findViewById(R.id.delete) as Button).visibility = Button.GONE
         }else{
-//            (findViewById(R.id.toolbar) as Toolbar).title = "Update Artwork"
             this.setTextFromViewById(R.id.save, "Update")
             this.getArtwork()
         }
