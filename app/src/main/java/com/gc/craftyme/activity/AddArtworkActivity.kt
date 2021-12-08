@@ -98,12 +98,13 @@ class AddArtworkActivity : DUBaseActivity() {
     //Firebase
     fun addArtwork(){
         val title = this.getTextFromViewById(R.id.title)
+        val description = this.getTextFromViewById(R.id.description)
         var artworkImageUrl = ""
         if(imageUri.toString() != null){
             artworkImageUrl = imageUri.toString()
         }
 
-        artwork = Artwork(this.getUniqueId(), title, "", artworkImageUrl)
+        artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl)
         val artworks = buildMap(1){
             put(artwork.id, artwork)
         }
@@ -120,7 +121,14 @@ class AddArtworkActivity : DUBaseActivity() {
 
     fun updateArtwork(){
         val title = this.getTextFromViewById(R.id.title)
-        artwork = Artwork(artwork.id, title, "", "")
+        val description = this.getTextFromViewById(R.id.description)
+        var artworkImageUrl = ""
+        if(imageUri.toString() != null){
+            artworkImageUrl = imageUri.toString()
+        }else{
+            artworkImageUrl = artwork.artworkImageUrl
+        }
+        artwork = Artwork(artwork.id, title, description, artworkImageUrl)
         firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
             .addOnSuccessListener {
                 Log.i(TAG, "Artwork Added or Updated successfully")
@@ -145,6 +153,7 @@ class AddArtworkActivity : DUBaseActivity() {
                         artworkMap.get(ARTWORK_IMAGE_URL).toString())
                     if(artwork != null){
                         this.setTextFromViewById(R.id.title, artwork.title)
+                        this.setTextFromViewById(R.id.description, artwork.artDescription)
                         val arrtworkImage: ImageView = findViewById(R.id.artworkImage) as ImageView
                         if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != ""){
                             Picasso.get().load(artwork.artworkImageUrl).into(arrtworkImage)
