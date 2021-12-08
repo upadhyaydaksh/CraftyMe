@@ -24,6 +24,9 @@ open class DUBaseActivity : AppCompatActivity() {
     //Artwork Fields
     protected val ARTWORK_ID = "id"
     protected val ARTWORK_TITLE = "title"
+    protected val ARTWORK_CREATED = "createdDate"
+    protected val ARTWORK_DESCRIPTION = "artDescription"
+    protected val ARTWORK_IMAGE_URL = "artworkImageUrl"
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

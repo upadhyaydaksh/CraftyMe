@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gc.craftyme.R
 import com.gc.craftyme.model.Artwork
 import com.gc.craftyme.utils.Constants
+import com.squareup.picasso.Picasso
 
 class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
@@ -30,10 +31,19 @@ class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeA
         val artwork = mList[position]
 
         // sets the image to the imageview from our itemHolder class
-        holder.imageView.setImageResource(R.drawable.splash)
+        if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != ""){
+            Picasso.get().load(artwork.artworkImageUrl).into(holder.artworkImage)
+        }
+        else{
+            holder.artworkImage.setImageResource(R.drawable.splash)
+        }
 
         // sets the text to the textview from our itemHolder class
-        holder.textView.text = artwork.title
+        holder.titleView.text = artwork.title
+
+//        holder.createdDateView.text =
+
+        holder.descriptionView.text = artwork.artDescription
 
         holder.itemView.setOnClickListener { view ->
             onItemClick(view, artwork)
@@ -56,7 +66,9 @@ class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeA
 
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.imageview)
-        val textView: TextView = itemView.findViewById(R.id.textView)
+        val artworkImage: ImageView = itemView.findViewById(R.id.artworkImage)
+        val titleView: TextView = itemView.findViewById(R.id.title)
+        val descriptionView: TextView = itemView.findViewById(R.id.description)
+        val createdDateView: TextView = itemView.findViewById(R.id.createdDate)
     }
 }

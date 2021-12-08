@@ -20,7 +20,7 @@ class SplashScreenActivity : DUBaseActivity() {
             // Check if user is signed in (non-null) and update UI accordingly.
             val currentUser = firebaseAuth.currentUser
             if(currentUser != null){
-                this.goToNextActivityWithoutHistory(AddArtworkActivity::class.java)
+                this.goToNextActivityWithoutHistory(HomeActivity::class.java)
             }
             else{
                 this.goToNextActivityWithoutHistory(LoginActivity::class.java)

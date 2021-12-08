@@ -1,13 +1,10 @@
 package com.gc.craftyme.activity
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
-import androidx.activity.result.contract.ActivityResultContracts
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
@@ -19,13 +16,11 @@ class AddArtworkActivity : DUBaseActivity() {
     lateinit var artwork: Artwork
     var artworkId = ""
     var isNew = true
-    var imageView: ImageView? = null
-    
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artwork)
-        imageView = findViewById(R.id.artworkImage) as ImageView
     }
 
     override fun onStart() {
@@ -77,13 +72,6 @@ class AddArtworkActivity : DUBaseActivity() {
         this.goBackToHomeActivity()
     }
 
-    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            val uri = it.data?.data!!
-            // Use the uri to load the image
-        }
-    }
-
     fun btnImagePickerAction(view: View){
 
     }
@@ -92,7 +80,7 @@ class AddArtworkActivity : DUBaseActivity() {
     //Firebase
     fun addArtwork(){
         val title = this.getTextFromViewById(R.id.title)
-        artwork = Artwork(this.getUniqueId(), title)
+        artwork = Artwork(this.getUniqueId(), title, "", "")
         val artworks = buildMap(1){
             put(artwork.id, artwork)
         }
@@ -109,7 +97,7 @@ class AddArtworkActivity : DUBaseActivity() {
 
     fun updateArtwork(){
         val title = this.getTextFromViewById(R.id.title)
-        artwork = Artwork(artwork.id, title)
+        artwork = Artwork(artwork.id, title, "", "")
         firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
             .addOnSuccessListener {
                 Log.i(TAG, "Artwork Added or Updated successfully")
@@ -129,7 +117,9 @@ class AddArtworkActivity : DUBaseActivity() {
                     var artworkMap = it.getValue() as Map<String, Any>
                     artwork = Artwork(
                         artworkMap.get(ARTWORK_ID).toString(),
-                        artworkMap.get(ARTWORK_TITLE).toString())
+                        artworkMap.get(ARTWORK_TITLE).toString(),
+                        artworkMap.get(ARTWORK_DESCRIPTION).toString(),
+                        artworkMap.get(ARTWORK_IMAGE_URL).toString())
                     if(artwork != null){
                         this.setTextFromViewById(R.id.title, artwork.title)
                     }

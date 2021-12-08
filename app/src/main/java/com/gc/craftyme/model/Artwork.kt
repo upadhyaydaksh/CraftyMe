@@ -2,11 +2,16 @@ package com.gc.craftyme.model
 
 open class Artwork {
 
-    var title = "text"
-    var id = "1"
+    var title = ""
+    var id = ""
+//    var createdDate = ""
+    var artDescription = ""
+    var artworkImageUrl = ""
 
-    constructor(id: String, title: String){
+    constructor(id: String, title: String, artDescription: String, artworkImageUrl: String){
         this.id = id
         this.title = title
+        this.artDescription = artDescription
+        this.artworkImageUrl = artworkImageUrl
     }
 }

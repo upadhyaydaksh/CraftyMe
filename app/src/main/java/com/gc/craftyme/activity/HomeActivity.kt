@@ -69,7 +69,9 @@ class HomeActivity : DUBaseActivity() {
                         var artworkValuesMap = v as Map<String, String>
                         artwork = Artwork(
                             artworkValuesMap.get(ARTWORK_ID).toString(),
-                            artworkValuesMap.get(ARTWORK_TITLE).toString())
+                            artworkValuesMap.get(ARTWORK_TITLE).toString(),
+                            artworkValuesMap.get(ARTWORK_DESCRIPTION).toString(),
+                            artworkValuesMap.get(ARTWORK_IMAGE_URL).toString())
                         artworks.add(artwork)
                     }
                 }
