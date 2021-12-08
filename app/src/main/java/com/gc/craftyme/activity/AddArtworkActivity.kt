@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import android.widget.Toolbar
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
@@ -49,8 +50,10 @@ class AddArtworkActivity : DUBaseActivity() {
         artworkId = intent.getStringExtra(Constants.ARTWORK_DETAIL_ID).toString()
         isNew = intent.getBooleanExtra(Constants.IS_NEW, true)
         if(isNew){
+//            (findViewById(R.id.toolbar) as Toolbar).title = "Add Artwork"
             (findViewById(R.id.delete) as Button).visibility = Button.GONE
         }else{
+//            (findViewById(R.id.toolbar) as Toolbar).title = "Update Artwork"
             this.setTextFromViewById(R.id.save, "Update")
             this.getArtwork()
         }
