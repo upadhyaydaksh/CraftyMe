@@ -1,15 +1,20 @@
 package com.gc.craftyme.activity
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.Artwork
 import com.gc.craftyme.utils.Constants
+import com.squareup.picasso.Picasso
 
 class AddArtworkActivity : DUBaseActivity() {
 
@@ -17,6 +22,9 @@ class AddArtworkActivity : DUBaseActivity() {
     var artworkId = ""
     var isNew = true
 
+    // Image picker variables
+    private val pickImage = 100
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,15 +80,30 @@ class AddArtworkActivity : DUBaseActivity() {
         this.goBackToHomeActivity()
     }
 
-    fun btnImagePickerAction(view: View){
+    fun btnChooseImageAction(view: View){
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(gallery, pickImage)
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+            (findViewById(R.id.artworkImage) as ImageView).setImageURI(imageUri)
+        }
     }
 
 
     //Firebase
     fun addArtwork(){
         val title = this.getTextFromViewById(R.id.title)
-        artwork = Artwork(this.getUniqueId(), title, "", "")
+        var artworkImageUrl = ""
+        if(imageUri.toString() != null){
+            artworkImageUrl = imageUri.toString()
+        }
+
+        artwork = Artwork(this.getUniqueId(), title, "", artworkImageUrl)
         val artworks = buildMap(1){
             put(artwork.id, artwork)
         }
@@ -122,6 +145,13 @@ class AddArtworkActivity : DUBaseActivity() {
                         artworkMap.get(ARTWORK_IMAGE_URL).toString())
                     if(artwork != null){
                         this.setTextFromViewById(R.id.title, artwork.title)
+                        val arrtworkImage: ImageView = findViewById(R.id.artworkImage) as ImageView
+                        if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != ""){
+                            Picasso.get().load(artwork.artworkImageUrl).into(arrtworkImage)
+                        }
+                        else{
+                            arrtworkImage.setImageResource(R.drawable.splash)
+                        }
                     }
                 }
             }
