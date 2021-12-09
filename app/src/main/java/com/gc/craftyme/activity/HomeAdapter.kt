@@ -38,6 +38,14 @@ class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeA
             holder.artworkImage.setImageResource(R.drawable.splash)
         }
 
+//        if (position == 0) {
+//            holder.artworkImage.setImageResource(R.drawable.ic_img1)
+//        } else if (position == 1) {
+//            holder.artworkImage.setImageResource(R.drawable.ic_img2)
+//        } else {
+//            holder.artworkImage.setImageResource(R.drawable.ic_img3)
+//        }
+
         // sets the text to the textview from our itemHolder class
         holder.titleView.text = artwork.title
 

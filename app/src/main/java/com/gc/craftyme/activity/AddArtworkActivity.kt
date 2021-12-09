@@ -199,6 +199,7 @@ class AddArtworkActivity : DUBaseActivity() {
                     if(artwork != null){
                         this.setTextFromViewById(R.id.title, artwork.title)
                         this.setTextFromViewById(R.id.description, artwork.artDescription)
+                        this.setTextFromViewById(R.id.createdDate, artwork.createdDate)
                         val arrtworkImage: ImageView = findViewById(R.id.artworkImage) as ImageView
                         if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != ""){
                             Picasso.get().load(artwork.artworkImageUrl).into(arrtworkImage)
