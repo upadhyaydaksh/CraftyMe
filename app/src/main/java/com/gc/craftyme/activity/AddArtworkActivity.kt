@@ -103,7 +103,7 @@ class AddArtworkActivity : DUBaseActivity() {
     private val captureImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
         if (isSuccess) {
             imageUri?.let { uri ->
-                artworkImage.setImageURI(uri)
+                Picasso.get().load(uri).into(artworkImage)
             }
         }
     }
@@ -111,7 +111,8 @@ class AddArtworkActivity : DUBaseActivity() {
     private val chooseImageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             imageUri = uri
-            artworkImage.setImageURI(imageUri) }
+            Picasso.get().load(imageUri).into(artworkImage)
+        }
     }
 
     private fun captureImage() {
@@ -146,7 +147,7 @@ class AddArtworkActivity : DUBaseActivity() {
         val description = this.getTextFromViewById(R.id.description)
         var artworkImageUrl = ""
         if(imageUri != null && imageUri.toString() != null){
-            var storageRef = firebaseStorage.getReference((currentuserId)+"_ARTWORK_"+getUniqueId()+".png");
+            var storageRef = firebaseStorage.getReference((currentuserId)+"_ARTWORK_"+getUniqueId()+".jpg");
             storageRef.putFile(imageUri!!).addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener {
                     artworkImageUrl = it.toString()
@@ -234,14 +235,11 @@ class AddArtworkActivity : DUBaseActivity() {
                         this.setTextFromViewById(R.id.title, artwork.title)
                         this.setTextFromViewById(R.id.description, artwork.artDescription)
                         this.setTextFromViewById(R.id.createdDate, artwork.createdDate)
-                        val artworkImage: ImageView = findViewById(R.id.artworkImage) as ImageView
                         if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != "null" &&artwork.artworkImageUrl != ""){
                             Picasso.get().load(artwork.artworkImageUrl).into(artworkImage)
-//                            (findViewById(R.id.artworkImage) as ImageView).setImageURI(artwork.artworkImageUrl.toUri())
                         }
                         else{
                             Picasso.get().load(R.drawable.splash).into(artworkImage)
-//                            (findViewById(R.id.artworkImage) as ImageView).setImageResource(R.drawable.splash)
                         }
                     }
                 }
