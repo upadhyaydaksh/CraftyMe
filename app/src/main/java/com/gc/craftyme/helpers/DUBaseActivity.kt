@@ -1,9 +1,12 @@
 package com.gc.craftyme.helpers
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import com.gc.craftyme.BuildConfig
 import com.gc.craftyme.activity.HomeActivity
 import com.gc.craftyme.activity.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -11,6 +14,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import java.io.File
 
 open class DUBaseActivity : AppCompatActivity() {
 
@@ -76,6 +80,15 @@ open class DUBaseActivity : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    fun getTmpFileUri(): Uri {
+        val tmpFile = File.createTempFile("tmp_image_file", ".jpg", cacheDir).apply {
+            createNewFile()
+            deleteOnExit()
+        }
+
+        return FileProvider.getUriForFile(applicationContext, "${BuildConfig.APPLICATION_ID}.provider", tmpFile)
     }
 
 }

@@ -2,38 +2,29 @@ package com.gc.craftyme.activity
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
-import android.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.net.toFile
+import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.Artwork
 import com.gc.craftyme.utils.Constants
-import com.google.android.gms.tasks.Task
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
-import com.google.firebase.storage.ktx.storageMetadata
+import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import com.swein.easypermissionmanager.EasyPermissionManager
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileInputStream
-import java.util.*
-import kotlin.coroutines.Continuation
+
 
 class AddArtworkActivity : DUBaseActivity() {
 
@@ -43,12 +34,16 @@ class AddArtworkActivity : DUBaseActivity() {
 
     // Image picker variables
     private var imageUri: Uri? = null
+    private var currentuserId = ""
+    private val artworkImage by lazy { findViewById<ImageView>(R.id.artworkImage) }
 
     private val easyPermissionManager = EasyPermissionManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artwork)
+        currentuserId = FirebaseAuth.getInstance().currentUser!!.uid
+        setClickListeners()
     }
 
     override fun onStart() {
@@ -100,114 +95,127 @@ class AddArtworkActivity : DUBaseActivity() {
         this.goBackToHomeActivity()
     }
 
-    fun btnCaptureImageAction(view: View){
+    private fun setClickListeners() {
+        findViewById<Button>(R.id.captureImage).setOnClickListener { captureImage() }
+        findViewById<Button>(R.id.chooseImage).setOnClickListener { chooseImage() }
+    }
+
+    private val captureImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+        if (isSuccess) {
+            imageUri?.let { uri ->
+                artworkImage.setImageURI(uri)
+            }
+        }
+    }
+
+    private val chooseImageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            imageUri = uri
+            artworkImage.setImageURI(imageUri) }
+    }
+
+    private fun captureImage() {
         easyPermissionManager.requestPermission("permisison", "permission are necessary", "setting",
-            arrayOf(Manifest.permission.CAMERA,
+            arrayOf(
+                Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE)){
-            imageUri = FileProvider.getUriForFile(this, "com.gc.craftyme.provider", createImageFile())
-            cameraLaunch.launch(imageUri)
+            lifecycleScope.launchWhenStarted {
+                getTmpFileUri().let { uri ->
+                    imageUri = uri
+                    captureImageResult.launch(imageUri)
+
+                }
+            }
         }
     }
 
-    fun btnChooseImageAction(view: View){
+    private fun chooseImage() {
         easyPermissionManager.requestPermission("permisison", "permission are necessary", "setting",
-            arrayOf(Manifest.permission.CAMERA,
+            arrayOf(
+                Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE)){
-            selectPictureLauncher.launch("image/*")
+            chooseImageResult.launch("image/*")
         }
     }
-    
-    private fun createImageFile(): File{
-        val dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile("temp_image", ".jpg", dir)
-    }
-
-    private val selectPictureLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){
-        (findViewById(R.id.artworkImage) as ImageView).setImageURI(it)
-    }
-
-    private  val cameraLaunch = registerForActivityResult(ActivityResultContracts.TakePicture()){
-        if(it){
-            (findViewById(R.id.artworkImage) as ImageView).setImageURI(imageUri)
-        }
-    }
-
 
     //Firebase
-//    private fun uploadImage(){
-//        if(imageUri != null){
-//            val storageReference = firebaseStorage.getReference()
-//            val ref = storageReference?.child("uploads/" + UUID.randomUUID().toString())
-//            val uploadTask = ref?.putFile(imageUri!!)
-//
-//            val urlTask = uploadTask?.continueWithTask(Continuation()<UploadTask.TaskSnapshot, Task<Uri>> { task ->
-//                if (!task.isSuccessful) {
-//                    task.exception?.let {
-//                        throw it
-//                    }
-//                }
-//                return@Continuation ref.downloadUrl
-//            })?.addOnCompleteListener {
-//                    task ->
-//                if (task.isSuccessful) {
-//                    val downloadUri = task.result
-////                    addUploadRecordToDb(downloadUri.toString())
-//                } else {
-//                    // Handle failures
-//                }
-//            }?.addOnFailureListener{
-//
-//            }
-//        }else{
-//            Toast.makeText(this, "Please Upload an Image", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
     fun addArtwork(){
-//        this.uploadImage()
         val title = this.getTextFromViewById(R.id.title)
         val description = this.getTextFromViewById(R.id.description)
         var artworkImageUrl = ""
-        if(imageUri.toString() != null){
-            artworkImageUrl = imageUri.toString()
-        }
-
-        artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl, "")
-        val artworks = buildMap(1){
-            put(artwork.id, artwork)
-        }
-        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).updateChildren(artworks)
-            .addOnSuccessListener {
-                Log.i(TAG, "Artwork Added successfully")
-                toast("Artwork Added Successfully")
-                this.updateUi()
+        if(imageUri != null && imageUri.toString() != null){
+            var storageRef = firebaseStorage.getReference((currentuserId)+"_ARTWORK_"+getUniqueId()+".png");
+            storageRef.putFile(imageUri!!).addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener {
+                    artworkImageUrl = it.toString()
+                    artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl, "")
+                    val artworks = buildMap(1){
+                        put(artwork.id, artwork)
+                    }
+                    firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).updateChildren(artworks)
+                        .addOnSuccessListener {
+                            Log.i(TAG, "Artwork Added successfully")
+                            toast("Artwork Added Successfully")
+                            this.updateUi()
+                        }
+                        .addOnFailureListener{
+                            Log.e(TAG, "Error Adding Artwork data", it)
+                        }
+                }
             }
-            .addOnFailureListener{
-                Log.e(TAG, "Error Adding Artwork data", it)
+        }else{
+            artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl, "")
+            val artworks = buildMap(1){
+                put(artwork.id, artwork)
             }
+            firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).updateChildren(artworks)
+                .addOnSuccessListener {
+                    Log.i(TAG, "Artwork Added successfully")
+                    toast("Artwork Added Successfully")
+                    this.updateUi()
+                }
+                .addOnFailureListener{
+                    Log.e(TAG, "Error Adding Artwork data", it)
+                }
+        }
     }
 
     fun updateArtwork(){
         val title = this.getTextFromViewById(R.id.title)
         val description = this.getTextFromViewById(R.id.description)
         var artworkImageUrl = ""
-        if(imageUri.toString() != null){
-            artworkImageUrl = imageUri.toString()
+        if(imageUri != null && imageUri.toString() != null){
+            var storageRef = firebaseStorage.getReference((currentuserId)+"_ARTWORK_"+getUniqueId()+".jpg");
+            storageRef.putFile(imageUri!!).addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener {
+                    artworkImageUrl = it.toString()
+                    artwork = Artwork(artwork.id, title, description, artworkImageUrl, "")
+                    firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
+                        .addOnSuccessListener {
+                            Log.i(TAG, "Updated successfully")
+                            toast("Artwork Updated Successfully")
+                            this.updateUi()
+                        }
+                        .addOnFailureListener{
+                            Log.e(TAG, "Error Updating Artwork data", it)
+                        }
+                }
+            }
         }else{
             artworkImageUrl = artwork.artworkImageUrl
+            artwork = Artwork(artwork.id, title, description, artworkImageUrl, "")
+            firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
+                .addOnSuccessListener {
+                    Log.i(TAG, "Updated successfully")
+                    toast("Artwork Updated Successfully")
+                    this.updateUi()
+                }
+                .addOnFailureListener{
+                    Log.e(TAG, "Error Updating Artwork data", it)
+                }
         }
-        artwork = Artwork(artwork.id, title, description, artworkImageUrl, "")
-        firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
-            .addOnSuccessListener {
-                Log.i(TAG, "Artwork Added or Updated successfully")
-                toast("Artwork Updated Successfully")
-                this.updateUi()
-            }
-            .addOnFailureListener{
-                Log.e(TAG, "Error Updating Artwork data", it)
-            }
     }
 
     fun getArtwork(){
@@ -226,12 +234,14 @@ class AddArtworkActivity : DUBaseActivity() {
                         this.setTextFromViewById(R.id.title, artwork.title)
                         this.setTextFromViewById(R.id.description, artwork.artDescription)
                         this.setTextFromViewById(R.id.createdDate, artwork.createdDate)
-                        val arrtworkImage: ImageView = findViewById(R.id.artworkImage) as ImageView
-                        if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != ""){
-                            Picasso.get().load(artwork.artworkImageUrl).into(arrtworkImage)
+                        val artworkImage: ImageView = findViewById(R.id.artworkImage) as ImageView
+                        if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != "null" &&artwork.artworkImageUrl != ""){
+                            Picasso.get().load(artwork.artworkImageUrl).into(artworkImage)
+//                            (findViewById(R.id.artworkImage) as ImageView).setImageURI(artwork.artworkImageUrl.toUri())
                         }
                         else{
-                            arrtworkImage.setImageResource(R.drawable.splash)
+                            Picasso.get().load(R.drawable.splash).into(artworkImage)
+//                            (findViewById(R.id.artworkImage) as ImageView).setImageResource(R.drawable.splash)
                         }
                     }
                 }
