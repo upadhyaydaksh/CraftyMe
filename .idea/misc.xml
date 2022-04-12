@@ -22,6 +22,8 @@
         <entry key="app/src/main/res/menu/navbar.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2640625" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2640625" />
+        <entry key="app/src/main/res/xml/file_paths.xml" value="0.246875" />
+        <entry key="app/src/main/res/xml/providerfile.xml" value="0.246875" />
       </map>
     </option>
   </component>

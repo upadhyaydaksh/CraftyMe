@@ -53,6 +53,7 @@ dependencies {
 
     //Cardview
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.github.DJSeokHo:EasyPermissionManager:1.0.9'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

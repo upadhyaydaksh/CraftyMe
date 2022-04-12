@@ -42,6 +42,15 @@
                 app:srcCompat="@drawable/splash" />
 
             <Button
+                android:id="@+id/captureImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="100dp"
+                android:layout_marginVertical="10dp"
+                android:onClick="btnCaptureImageAction"
+                android:text="Take Photo" />
+
+            <Button
                 android:id="@+id/chooseImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

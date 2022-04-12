@@ -1,11 +1,13 @@
 package com.gc.craftyme.activity
 
+import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -13,6 +15,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import android.widget.Toolbar
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
@@ -24,6 +28,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storageMetadata
 import com.squareup.picasso.Picasso
+import com.swein.easypermissionmanager.EasyPermissionManager
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -37,8 +42,9 @@ class AddArtworkActivity : DUBaseActivity() {
     var isNew = true
 
     // Image picker variables
-    private val pickImage = 100
     private var imageUri: Uri? = null
+
+    private val easyPermissionManager = EasyPermissionManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,16 +100,36 @@ class AddArtworkActivity : DUBaseActivity() {
         this.goBackToHomeActivity()
     }
 
-    fun btnChooseImageAction(view: View){
-        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        startActivityForResult(gallery, pickImage)
-
+    fun btnCaptureImageAction(view: View){
+        easyPermissionManager.requestPermission("permisison", "permission are necessary", "setting",
+            arrayOf(Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE)){
+            imageUri = FileProvider.getUriForFile(this, "com.gc.craftyme.provider", createImageFile())
+            cameraLaunch.launch(imageUri)
+        }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == pickImage) {
-            imageUri = data?.data
+    fun btnChooseImageAction(view: View){
+        easyPermissionManager.requestPermission("permisison", "permission are necessary", "setting",
+            arrayOf(Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE)){
+            selectPictureLauncher.launch("image/*")
+        }
+    }
+    
+    private fun createImageFile(): File{
+        val dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile("temp_image", ".jpg", dir)
+    }
+
+    private val selectPictureLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){
+        (findViewById(R.id.artworkImage) as ImageView).setImageURI(it)
+    }
+
+    private  val cameraLaunch = registerForActivityResult(ActivityResultContracts.TakePicture()){
+        if(it){
             (findViewById(R.id.artworkImage) as ImageView).setImageURI(imageUri)
         }
     }
