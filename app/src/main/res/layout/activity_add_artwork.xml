@@ -98,7 +98,6 @@
                 android:layout_height="48dp"
                 android:background="@color/white"
                 android:hint="@string/prompt_created_date"
-                android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
@@ -109,7 +108,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusableInTouchMode="true"
+                android:cursorVisible="false"
+                android:focusable="false"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

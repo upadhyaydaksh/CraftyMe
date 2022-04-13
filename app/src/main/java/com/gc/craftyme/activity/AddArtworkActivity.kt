@@ -2,12 +2,14 @@ package com.gc.craftyme.activity
 
 import android.Manifest
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +21,9 @@ import com.gc.craftyme.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import com.swein.easypermissionmanager.EasyPermissionManager
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class AddArtworkActivity : DUBaseActivity() {
@@ -33,6 +38,8 @@ class AddArtworkActivity : DUBaseActivity() {
     private val artworkImage by lazy { findViewById<ImageView>(R.id.artworkImage) }
 
     private val easyPermissionManager = EasyPermissionManager(this)
+
+    var datePickerDialog: DatePickerDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +105,30 @@ class AddArtworkActivity : DUBaseActivity() {
     private fun setClickListeners() {
         findViewById<Button>(R.id.captureImage).setOnClickListener { captureImage() }
         findViewById<Button>(R.id.chooseImage).setOnClickListener { chooseImage() }
+        findViewById<EditText>(R.id.createdDate).setOnClickListener{
+            val c: Calendar = Calendar.getInstance()
+            val mYear: Int = c.get(Calendar.YEAR)
+
+            val mMonth: Int = c.get(Calendar.MONTH)
+
+            val mDay: Int = c.get(Calendar.DAY_OF_MONTH)
+
+            datePickerDialog = DatePickerDialog(this,
+                { view, year, monthOfYear, dayOfMonth ->
+                    val cal = Calendar.getInstance()
+                    cal.set(year, monthOfYear, dayOfMonth)
+
+                    findViewById<EditText>(R.id.createdDate).setText(
+
+                        DateTimeFormatter.ofPattern("MMM dd, yyyy")
+                            .withZone(ZoneId.of("UTC"))
+                            .format(cal.toInstant())
+                    )
+                }, mYear, mMonth, mDay
+            )
+            datePickerDialog!!.show()
+        }
+
     }
 
     private val captureImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
@@ -145,13 +176,14 @@ class AddArtworkActivity : DUBaseActivity() {
     fun addArtwork(){
         val title = this.getTextFromViewById(R.id.title)
         val description = this.getTextFromViewById(R.id.description)
+        val createdDate = this.getTextFromViewById(R.id.createdDate)
         var artworkImageUrl = ""
         if(imageUri != null && imageUri.toString() != null){
             var storageRef = firebaseStorage.getReference((currentuserId)+"_ARTWORK_"+getUniqueId()+".jpg");
             storageRef.putFile(imageUri!!).addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener {
                     artworkImageUrl = it.toString()
-                    artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl, "")
+                    artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl, createdDate)
                     val artworks = buildMap(1){
                         put(artwork.id, artwork)
                     }
@@ -167,7 +199,7 @@ class AddArtworkActivity : DUBaseActivity() {
                 }
             }
         }else{
-            artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl, "")
+            artwork = Artwork(this.getUniqueId(), title, description, artworkImageUrl, createdDate)
             val artworks = buildMap(1){
                 put(artwork.id, artwork)
             }
@@ -186,13 +218,14 @@ class AddArtworkActivity : DUBaseActivity() {
     fun updateArtwork(){
         val title = this.getTextFromViewById(R.id.title)
         val description = this.getTextFromViewById(R.id.description)
+        val createdDate = this.getTextFromViewById(R.id.createdDate)
         var artworkImageUrl = ""
         if(imageUri != null && imageUri.toString() != null){
             var storageRef = firebaseStorage.getReference((currentuserId)+"_ARTWORK_"+getUniqueId()+".jpg");
             storageRef.putFile(imageUri!!).addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener {
                     artworkImageUrl = it.toString()
-                    artwork = Artwork(artwork.id, title, description, artworkImageUrl, "")
+                    artwork = Artwork(artwork.id, title, description, artworkImageUrl, createdDate)
                     firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
                         .addOnSuccessListener {
                             Log.i(TAG, "Updated successfully")
@@ -206,7 +239,7 @@ class AddArtworkActivity : DUBaseActivity() {
             }
         }else{
             artworkImageUrl = artwork.artworkImageUrl
-            artwork = Artwork(artwork.id, title, description, artworkImageUrl, "")
+            artwork = Artwork(artwork.id, title, description, artworkImageUrl, createdDate)
             firebaseDatabase.child(NODE_USERS).child(firebaseAuth.uid.toString()).child(NODE_USERS_ARTWORKS).child(artwork.id).setValue(artwork)
                 .addOnSuccessListener {
                     Log.i(TAG, "Updated successfully")
