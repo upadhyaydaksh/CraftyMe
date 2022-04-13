@@ -5,12 +5,15 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.gc.craftyme.R
 import com.gc.craftyme.model.Artwork
 import com.gc.craftyme.utils.Constants
+import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
 
 class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
@@ -57,6 +60,8 @@ class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeA
             onItemClick(view, artwork)
         }
 
+        holder.container.animation =
+            AnimationUtils.loadAnimation(holder.itemView.context, R.anim.scale_anim)
     }
 
     fun onItemClick(view: View, artwork: Artwork){
@@ -74,6 +79,7 @@ class HomeAdapter(private val mList: List<Artwork>) : RecyclerView.Adapter<HomeA
 
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+        val container = itemView.findViewById<ConstraintLayout>(R.id.container)
         val artworkImage: ImageView = itemView.findViewById(R.id.artworkImage)
         val titleView: TextView = itemView.findViewById(R.id.title)
         val descriptionView: TextView = itemView.findViewById(R.id.description)

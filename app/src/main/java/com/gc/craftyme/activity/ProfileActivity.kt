@@ -6,10 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.gc.craftyme.BuildConfig
 import com.gc.craftyme.R
@@ -52,6 +54,7 @@ class ProfileActivity : DUBaseActivity() {
         if (isSuccess) {
             imageUri?.let { uri ->
                 profileImage.setImageURI(uri)
+                profileImage.animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim)
             }
         }
     }
@@ -59,7 +62,9 @@ class ProfileActivity : DUBaseActivity() {
     private val chooseImageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             imageUri = uri
-            profileImage.setImageURI(imageUri) }
+            profileImage.setImageURI(imageUri)
+            profileImage.animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim)
+        }
     }
 
     private fun captureImage() {
@@ -137,10 +142,12 @@ class ProfileActivity : DUBaseActivity() {
                     this.setTextFromViewById(R.id.email, user.email)
                     val profileImage: ImageView = findViewById(R.id.profileImage) as ImageView
                     if(user.profilePicture != ""){
-                        Picasso.get().load(user.profilePicture).into(profileImage)
+                        Picasso.get().load(user.profilePicture).noFade().into(profileImage)
+                        profileImage.animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim)
                     }
                     else{
                         profileImage.setImageResource(R.drawable.splash)
+                        profileImage.animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim)
                     }
                 }
             }.addOnFailureListener{

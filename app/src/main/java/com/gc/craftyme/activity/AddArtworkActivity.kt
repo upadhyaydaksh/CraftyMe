@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -41,7 +42,6 @@ class AddArtworkActivity : DUBaseActivity() {
     private var imageUri: Uri? = null
     private var currentuserId = ""
 
-//    private val binding: ActivityMainBinding? = null
     private val CHANNEL_ID = "MY_CHANNEL"
     private var notificationId = 1
 
@@ -145,7 +145,8 @@ class AddArtworkActivity : DUBaseActivity() {
     private val captureImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
         if (isSuccess) {
             imageUri?.let { uri ->
-                Picasso.get().load(uri).into(artworkImage)
+                Picasso.get().load(uri).noFade().into(artworkImage)
+                artworkImage.animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim)
             }
         }
     }
@@ -153,7 +154,8 @@ class AddArtworkActivity : DUBaseActivity() {
     private val chooseImageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             imageUri = uri
-            Picasso.get().load(imageUri).into(artworkImage)
+            Picasso.get().load(imageUri).noFade().into(artworkImage)
+            artworkImage.animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim)
         }
     }
 
@@ -325,10 +327,12 @@ class AddArtworkActivity : DUBaseActivity() {
                         this.setTextFromViewById(R.id.description, artwork.artDescription)
                         this.setTextFromViewById(R.id.createdDate, artwork.createdDate)
                         if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != "null" && artwork.artworkImageUrl != ""){
-                            Picasso.get().load(artwork.artworkImageUrl).into(artworkImage)
+                            Picasso.get().load(artwork.artworkImageUrl).noFade().into(artworkImage)
+                            artworkImage.animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim)
                         }
                         else{
-                            Picasso.get().load(R.drawable.splash).into(artworkImage)
+                            Picasso.get().load(R.drawable.splash).noFade().into(artworkImage)
+                            artworkImage.animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim)
                         }
                     }
                 }
