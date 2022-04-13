@@ -3,8 +3,11 @@ package com.gc.craftyme.activity
 import android.Manifest
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,6 +15,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
@@ -35,6 +40,11 @@ class AddArtworkActivity : DUBaseActivity() {
     // Image picker variables
     private var imageUri: Uri? = null
     private var currentuserId = ""
+
+//    private val binding: ActivityMainBinding? = null
+    private val CHANNEL_ID = "MY_CHANNEL"
+    private var notificationId = 1
+
     private val artworkImage by lazy { findViewById<ImageView>(R.id.artworkImage) }
 
     private val easyPermissionManager = EasyPermissionManager(this)
@@ -51,6 +61,7 @@ class AddArtworkActivity : DUBaseActivity() {
         setContentView(R.layout.activity_add_artwork)
         currentuserId = FirebaseAuth.getInstance().currentUser!!.uid
         setClickListeners()
+        createNotificationChannel()
     }
 
     override fun onStart() {
@@ -172,6 +183,47 @@ class AddArtworkActivity : DUBaseActivity() {
         }
     }
 
+    private fun fireNotification(){
+
+        val builder: NotificationCompat.Builder = NotificationCompat.Builder(
+            this,CHANNEL_ID
+        )
+            .setSmallIcon(R.drawable.splash)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        if(isNew){
+            builder.setContentTitle("Artwork Added Successfully")
+                .setContentText("Your Artwork Was Added Successfully")
+        }else{
+            builder.setContentTitle("Artwork Updated Successfully")
+                .setContentText("Your Artwork Was Updated Successfully")
+        }
+
+        val notificationManager = NotificationManagerCompat.from(this)
+        notificationManager.notify(notificationId++, builder.build())
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name: CharSequence = "My Channel"
+            val description = "Channel Description"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                name,
+                importance
+            )
+            channel.description = description
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            val notificationManager = getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
     //Firebase
     fun addArtwork(){
         val title = this.getTextFromViewById(R.id.title)
@@ -191,6 +243,7 @@ class AddArtworkActivity : DUBaseActivity() {
                         .addOnSuccessListener {
                             Log.i(TAG, "Artwork Added successfully")
                             toast("Artwork Added Successfully")
+                            fireNotification()
                             this.updateUi()
                         }
                         .addOnFailureListener{
@@ -207,6 +260,7 @@ class AddArtworkActivity : DUBaseActivity() {
                 .addOnSuccessListener {
                     Log.i(TAG, "Artwork Added successfully")
                     toast("Artwork Added Successfully")
+                    fireNotification()
                     this.updateUi()
                 }
                 .addOnFailureListener{
@@ -230,6 +284,7 @@ class AddArtworkActivity : DUBaseActivity() {
                         .addOnSuccessListener {
                             Log.i(TAG, "Updated successfully")
                             toast("Artwork Updated Successfully")
+                            fireNotification()
                             this.updateUi()
                         }
                         .addOnFailureListener{
@@ -244,6 +299,7 @@ class AddArtworkActivity : DUBaseActivity() {
                 .addOnSuccessListener {
                     Log.i(TAG, "Updated successfully")
                     toast("Artwork Updated Successfully")
+                    fireNotification()
                     this.updateUi()
                 }
                 .addOnFailureListener{
