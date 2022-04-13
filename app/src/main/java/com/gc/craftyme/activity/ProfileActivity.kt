@@ -63,7 +63,7 @@ class ProfileActivity : DUBaseActivity() {
     }
 
     private fun captureImage() {
-        easyPermissionManager.requestPermission("permisison", "permission are necessary", "setting",
+        easyPermissionManager.requestPermission("Camera Permission", "Camera Permissions are necessary", "Settings",
             arrayOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -79,7 +79,7 @@ class ProfileActivity : DUBaseActivity() {
     }
 
     private fun chooseImage() {
-        easyPermissionManager.requestPermission("permisison", "permission are necessary", "setting",
+        easyPermissionManager.requestPermission("Camera Permission", "Camera Permissions are necessary", "Settings",
             arrayOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,

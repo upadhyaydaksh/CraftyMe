@@ -2,28 +2,23 @@ package com.gc.craftyme.activity
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.FileProvider
-import androidx.core.net.toFile
-import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.gc.craftyme.R
 import com.gc.craftyme.helpers.DUBaseActivity
 import com.gc.craftyme.helpers.Extensions.toast
 import com.gc.craftyme.model.Artwork
 import com.gc.craftyme.utils.Constants
-import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import com.swein.easypermissionmanager.EasyPermissionManager
-import java.io.File
 
 
 class AddArtworkActivity : DUBaseActivity() {
@@ -41,6 +36,11 @@ class AddArtworkActivity : DUBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(firebaseAuth.uid == null || firebaseAuth.uid == ""){
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
         setContentView(R.layout.activity_add_artwork)
         currentuserId = FirebaseAuth.getInstance().currentUser!!.uid
         setClickListeners()
@@ -116,7 +116,7 @@ class AddArtworkActivity : DUBaseActivity() {
     }
 
     private fun captureImage() {
-        easyPermissionManager.requestPermission("permisison", "permission are necessary", "setting",
+        easyPermissionManager.requestPermission("Camera Permission", "Camera Permissions are necessary", "Settings",
             arrayOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -132,7 +132,7 @@ class AddArtworkActivity : DUBaseActivity() {
     }
 
     private fun chooseImage() {
-        easyPermissionManager.requestPermission("permisison", "permission are necessary", "setting",
+        easyPermissionManager.requestPermission("Camera Permission", "Camera Permissions are necessary", "Settings",
             arrayOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -235,7 +235,7 @@ class AddArtworkActivity : DUBaseActivity() {
                         this.setTextFromViewById(R.id.title, artwork.title)
                         this.setTextFromViewById(R.id.description, artwork.artDescription)
                         this.setTextFromViewById(R.id.createdDate, artwork.createdDate)
-                        if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != "null" &&artwork.artworkImageUrl != ""){
+                        if(artwork.artworkImageUrl != null && artwork.artworkImageUrl != "null" && artwork.artworkImageUrl != ""){
                             Picasso.get().load(artwork.artworkImageUrl).into(artworkImage)
                         }
                         else{
