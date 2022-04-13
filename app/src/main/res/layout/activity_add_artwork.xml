@@ -41,21 +41,30 @@
                 android:layout_marginHorizontal="40dp"
                 app:srcCompat="@drawable/splash" />
 
-            <Button
-                android:id="@+id/captureImage"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="100dp"
-                android:layout_marginVertical="10dp"
-                android:text="Take Photo" />
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/chooseImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="100dp"
-                android:layout_marginVertical="10dp"
-                android:text="Choose Image" />
+                <Button
+                    android:id="@+id/captureImage"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:text="Take Photo" />
+
+                <Button
+                    android:id="@+id/chooseImage"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:layout_weight="1"
+                    android:layout_width="100dp"
+                    android:text="Choose Image" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/title"
@@ -147,6 +156,7 @@
                     android:layout_height="48dp"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="40dp"
                     android:layout_weight="1"
                     android:onClick="btnDeleteAction"
                     android:singleLine="true"
